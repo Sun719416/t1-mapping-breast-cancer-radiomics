@@ -34,12 +34,12 @@ pre_lasso_mode    = "rf"    # "rf" or "mrmr"
 pre_lasso_fea_num = 100
 icc_threshold     = 0.75    
 
-train_ids_file   = r"C:\Users\Sun\Desktop\zhang_malignant_nii\train_regular.txt"
-test_ids_file    = r"C:\Users\Sun\Desktop\zhang_malignant_nii\test_regular.txt"
+train_ids_file   = r"C:\Users\Sun\Desktop\3dslicer_malignant_nii\train_regular.txt"
+test_ids_file    = r"C:\Users\Sun\Desktop\3dslicer_malignant_nii\test_regular.txt"
 icc_passed_file  = "icc_passed_regular.txt"
 
 
-excel_dir = r"C:\Users\Sun\Desktop\zhang_malignant_nii"
+excel_dir = r"C:\Users\Sun\Desktop\3dslicer_malignant_nii"
 files_r1 = {
     "DCE":      os.path.join(excel_dir, "DCE.xlsx"),
     "STIR":     os.path.join(excel_dir, "stir.xlsx"),
@@ -70,7 +70,7 @@ ro_all       = pd.concat(dfs_r1, axis=1, join="inner")
 df_target    = label_df.loc[ro_all.index,"Label"].astype(int)
 
 
-ro_all.to_excel(r"C:\Users\Sun\Desktop\zhang_malignant_nii\ro_all_merged_regular.xlsx", index=True)
+ro_all.to_excel(r"C:\Users\Sun\Desktop\3dslicer_malignant_nii\ro_all_merged_regular.xlsx", index=True)
 
 
 all_ids      = ro_all.index.to_list()
@@ -92,7 +92,7 @@ ro_test  = ro_all.loc[test_ids]
 y_test   = df_target.loc[test_ids]
 
 
-excel_dir = r"C:\Users\Sun\Desktop\zhang_malignant_nii"
+excel_dir = r"C:\Users\Sun\Desktop\3dslicer_malignant_nii"
 files_r1 = {
     "DCE":      os.path.join(excel_dir, "DCE.xlsx"),
     "STIR":     os.path.join(excel_dir, "stir.xlsx"),
@@ -211,8 +211,8 @@ data_1_cleaned = ro2_train_filtered[["reader", "target"] + list(features_to_keep
 import pandas as pd
 
 
-file_path = r"C:\Users\Sun\Desktop\zhang_malignant_nii\ro_all_merged_regular.xlsx"  
-features_path = r"C:\Users\Sun\Desktop\zhang_malignant_nii\features_to_keep_regular.txt"  
+file_path = r"C:\Users\Sun\Desktop\3dslicer_malignant_nii\ro_all_merged_regular.xlsx"  
+features_path = r"C:\Users\Sun\Desktop\3dslicer_malignant_nii\features_to_keep_regular.txt"  
 
 
 df = pd.read_excel(file_path, index_col="PatientID") 
@@ -226,7 +226,7 @@ selected_features = [feature.strip() for feature in selected_features]
 X_selected = df[selected_features] 
 
 
-output_path = r"C:\Users\Sun\Desktop\zhang_malignant_nii\ICC_cleaned_regular.xlsx"
+output_path = r"C:\Users\Sun\Desktop\3dslicer_malignant_nii\ICC_cleaned_regular.xlsx"
 X_selected.to_excel(output_path, index=True)  
 
 print(f"筛选后的数据已保存到 '{output_path}'.")
@@ -238,7 +238,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import os
 
-base_dir = r"C:\Users\Sun\Desktop\zhang_malignant_nii"
+base_dir = r"C:\Users\Sun\Desktop\3dslicer_malignant_nii"
 features_path = os.path.join(base_dir, "ICC_cleaned_regular.xlsx")  
 train_path = os.path.join(base_dir, "train_regular.txt") 
 test_path = os.path.join(base_dir, "test_regular.txt")  
@@ -280,7 +280,7 @@ from sklearn.metrics import roc_auc_score
 redundancy_threshold = 0.75
 
 def auc_strength(series, y):
-    """以训练集为基准，计算单特征与标签的判别力；返回 max(AUC, 1-AUC)。"""
+
     s = pd.Series(series)
     if s.nunique(dropna=True) <= 1:
         return 0.5
@@ -363,7 +363,7 @@ X_train_with_patientID = X_train_with_patientID.sort_values(by='PatientID')
 cols = ['PatientID', 'Label'] + [col for col in X_train_with_patientID.columns if col not in ['PatientID', 'Label']]
 X_train_with_patientID = X_train_with_patientID[cols]
 
-output_path_ttest_selected = r"C:\Users\Sun\Desktop\zhang_malignant_nii\X_train_selected_features_regular.xlsx"
+output_path_ttest_selected = r"C:\Users\Sun\Desktop\3dslicer_malignant_nii\X_train_selected_features_regular.xlsx"
 X_train_with_patientID.to_excel(output_path_ttest_selected, index=False)
 
 
@@ -424,7 +424,7 @@ print('Lasso picked '+str(sum(coef != 0))+' variables and eliminated the other '
 
 selected_features = coef[coef != 0].index  
 
-with open(r"C:\Users\Sun\Desktop\zhang_malignant_nii\lasso_selected_features_regular.txt", 'w') as f:
+with open(r"C:\Users\Sun\Desktop\3dslicer_malignant_nii\lasso_selected_features_regular.txt", 'w') as f:
     for feature in selected_features:
         f.write(f"{feature}\n")
 print("Lasso selected features saved to 'lasso_selected_features_regular.txt'.")
@@ -433,7 +433,7 @@ print("Lasso selected features saved to 'lasso_selected_features_regular.txt'.")
 X_train_final = pd.DataFrame(X_train_scaled[selected_features].values, columns=selected_features) 
 final_data = data[['PatientID', 'Label']].join(X_train_final)  
 
-output_path = r"C:\Users\Sun\Desktop\zhang_malignant_nii\lasso_selected_data_train_regular.xlsx"
+output_path = r"C:\Users\Sun\Desktop\3dslicer_malignant_nii\lasso_selected_data_train_regular.xlsx"
 final_data.to_excel(output_path, index=False)
 
 print(f"Lasso selected data saved to '{output_path}'.")
